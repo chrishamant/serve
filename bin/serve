@@ -8,6 +8,7 @@ var resolve = require('path').resolve
   , join = require('path').join
   , program = require('commander')
   , connect = require('connect')
+  , coffee = require('coffee-script')
   , stylus = require('stylus')
   , jade = require('jade')
   , url = require('url')
@@ -26,6 +27,9 @@ program
   .option('-I, --no-icons', 'disable icons')
   .option('-L, --no-logs', 'disable request logging')
   .option('-D, --no-dirs', 'disable directory serving')
+  .option('-C, --no-coffee', 'disable coffeescript rendering')
+  .option('-c, --coffeepath <coffeepath>', 'specify the path to coffee files [src/coffee]', String, 'src/coffee')
+  .option('-j, --jspath <jspath>', 'specify the basepath to js files [javascripts]', String, 'javascripts')
   .parse(process.argv);
 
 // path
@@ -45,6 +49,23 @@ if (program.stylus) {
   server.use(function(req, res, next){
     req.url = req.url.replace(/\.styl$/, '.css');
     next();
+  });
+}
+
+if (program.coffee) {
+  server.use(function(req, res, next){
+    if (!req.url.match(/\.js$/)) return next();
+    var file = join(path, url.parse(req.url).pathname.replace(program.jspath, program.coffeepath).replace(/\.js/, '.coffee'));
+    fs.readFile(file, 'ascii', function(err, str){
+      if (err) return next(err);
+      try {
+        res.setHeader('Content-Type', 'application/x-javascript');
+        js = coffee.compile( str );
+        res.end(js);
+      } catch (err) {
+        next(err);
+      }
+    });
   });
 }
 
