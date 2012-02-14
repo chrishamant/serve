@@ -22,8 +22,8 @@ program
   .usage('[options] [dir]')
   .option('-F, --format <fmt>', 'specify the log format string', 'dev')
   .option('-p, --port <port>', 'specify the port [3000]', Number, 3000)
-  .option('-c, --cspath <cspath>', 'specify the path to coffee files [src/coffee]', String, 'src/coffee')
-  .option('-j, --jspath <jspath>', 'specify the basepath to js files [javascripts]', String, 'javascripts')
+  .option('-c, --csdir <csdir>', 'specify the path to coffee files [src/coffee]', String, 'src/coffee')
+  .option('-j, --jsdir <jsdir>', 'specify the base url to js files [javascripts]', String, 'javascripts')
   .option('-H, --hidden', 'enable hidden file serving')
   .option('-S, --no-stylus', 'disable stylus rendering')
   .option('-J, --no-jade', 'disable jade rendering')
@@ -61,7 +61,7 @@ if (program.coffee) {
     if( existsSync(join(path, url.parse(req.url).pathname)) ){
       return next();
     } else {
-      var file = join(path, url.parse(req.url).pathname.replace(program.jspath, program.cspath).replace(/\.js/, '.coffee'));
+      var file = join(path, url.parse(req.url).pathname.replace(program.jsdir, program.csdir).replace(/\.js/, '.coffee'));
       fs.readFile(file, 'ascii', function(err, str){
         if (err) return next(err);
         try {

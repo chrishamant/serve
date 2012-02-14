@@ -15,16 +15,19 @@ Usage: serve [options] [dir]
 
 Options:
 
-  -v, --version       output the version number
-  -F, --format <fmt>  specify the log format string
-  -p, --port <port>   specify the port [3000]
-  -H, --hidden        enable hidden file serving
-  -S, --no-stylus     disable stylus rendering
-  -J, --no-jade       disable jade rendering
-  -I, --no-icons      disable icons
-  -L, --no-logs       disable request logging
-  -D, --no-dirs       disable directory serving
-  -h, --help          output usage information
+  -v, --version        output the version number
+  -F, --format <fmt>   specify the log format string
+  -p, --port <port>    specify the port [3000]
+  -c, --csdir <csdir>  specify the path to coffee files [src/coffee]
+  -j, --jsdir <jsdir>  specify the base url to js files [javascripts]
+  -H, --hidden         enable hidden file serving
+  -S, --no-stylus      disable stylus rendering
+  -J, --no-jade        disable jade rendering
+  -I, --no-icons       disable icons
+  -L, --no-logs        disable request logging
+  -D, --no-dirs        disable directory serving
+  -C, --no-coffee      disable coffeescript rendering
+  -h, --help           output usage information
 
 ```
 
