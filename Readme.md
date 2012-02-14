@@ -58,6 +58,14 @@ Options:
 
   ![directory listings](http://f.cl.ly/items/100M2C3o0p2u3A0q1o3H/Screenshot.png)
 
+
+### Using CoffeeScript compiler
+  If `localhost:3000/javascritps/main.js` has been requested and `src/coffee/main.coffee` exists on root,
+  it will compile the `main.coffee` and returns compiled js file.
+
+  Base URL for javascripts can be configured by `--jsdir pathname/to/js` or `-j`.
+  The directory to look for CoffeeScript can be configured through `--csdir dir/to/coffee` or `-c`.
+
 ## License 
 
 (The MIT License)
