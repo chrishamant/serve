@@ -56,12 +56,14 @@ if (program.stylus) {
 // Compile CoffeeScript
 if (program.coffee) {
   server.use(function(req, res, next){
-    if (!req.url.match(/\.js$/)) return next();
+    var reqURL = req.url.replace(/\?_=\d+/, '');
+    if (!reqURL.match(/\.js(\?.+)?$/)) return next();
     // Check if the js exists already
     if( existsSync(join(path, url.parse(req.url).pathname)) ){
       return next();
     } else {
       var file = join(path, url.parse(req.url).pathname.replace(program.jsdir, program.csdir).replace(/\.js(\?_=\d+)?/, '.coffee'));
+      console.log(file);
       fs.readFile(file, 'ascii', function(err, str){
         if (err) return next(err);
         try {
@@ -115,3 +117,4 @@ if (program.dirs) {
 // start the server
 server.listen(program.port);
 console.log('\033[90mserving \033[36m%s\033[90m on port \033[96m%d\033[0m', path, server.address().port);
+
