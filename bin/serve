@@ -61,7 +61,7 @@ if (program.coffee) {
     if( existsSync(join(path, url.parse(req.url).pathname)) ){
       return next();
     } else {
-      var file = join(path, url.parse(req.url).pathname.replace(program.jsdir, program.csdir).replace(/\.js/, '.coffee'));
+      var file = join(path, url.parse(req.url).pathname.replace(program.jsdir, program.csdir).replace(/\.js(\?_=\d+)?/, '.coffee'));
       fs.readFile(file, 'ascii', function(err, str){
         if (err) return next(err);
         try {
