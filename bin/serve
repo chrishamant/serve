@@ -11,6 +11,7 @@ var resolve = require('path').resolve
   , connect = require('connect')
   , coffee = require('coffee-script')
   , stylus = require('stylus')
+  , nib    = require('nib')
   , jade = require('jade')
   , url = require('url')
   , fs = require('fs');
@@ -59,6 +60,7 @@ if (program.coffee) {
     var reqURL = req.url.replace(/\?_=\d+/, '');
     if (!reqURL.match(/\.js(\?.+)?$/)) return next();
     // Check if the js exists already
+    console.log(join(path, url.parse(req.url).pathname));
     if( existsSync(join(path, url.parse(req.url).pathname)) ){
       return next();
     } else {
@@ -100,7 +102,12 @@ if (program.jade) {
 }
 
 // stylus
-server.use(stylus.middleware({ src: path }));
+server.use(stylus.middleware({
+  src: path,
+  compile: function(str, path, fn){
+    return stylus(str).use(nib())
+  }
+}));
 
 // static files
 server.use(connect.static(path, { hidden: program.hidden }));
