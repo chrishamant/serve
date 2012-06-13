@@ -15,16 +15,19 @@ Usage: serve [options] [dir]
 
 Options:
 
-  -v, --version       output the version number
-  -F, --format <fmt>  specify the log format string
-  -p, --port <port>   specify the port [3000]
-  -H, --hidden        enable hidden file serving
-  -S, --no-stylus     disable stylus rendering
-  -J, --no-jade       disable jade rendering
-  -I, --no-icons      disable icons
-  -L, --no-logs       disable request logging
-  -D, --no-dirs       disable directory serving
-  -h, --help          output usage information
+  -v, --version        output the version number
+  -F, --format <fmt>   specify the log format string
+  -p, --port <port>    specify the port [3000]
+  -c, --csdir <csdir>  specify the path to coffee files [src/coffee]
+  -j, --jsdir <jsdir>  specify the base url to js files [javascripts]
+  -H, --hidden         enable hidden file serving
+  -S, --no-stylus      disable stylus rendering
+  -J, --no-jade        disable jade rendering
+  -I, --no-icons       disable icons
+  -L, --no-logs        disable request logging
+  -D, --no-dirs        disable directory serving
+  -C, --no-coffee      disable coffeescript rendering
+  -h, --help           output usage information
 
 ```
 
@@ -54,6 +57,14 @@ Options:
  Directory listing served by connect's `connect.directory()` middleware.
 
   ![directory listings](http://f.cl.ly/items/100M2C3o0p2u3A0q1o3H/Screenshot.png)
+
+
+### Using CoffeeScript compiler
+  If `localhost:3000/javascritps/main.js` has been requested and `src/coffee/main.coffee` exists on root,
+  it will compile the `main.coffee` and returns compiled js file.
+
+  Base URL for javascripts can be configured by `--jsdir pathname/to/js` or `-j`.
+  The directory to look for CoffeeScript can be configured through `--csdir dir/to/coffee` or `-c`.
 
 ## License 
 

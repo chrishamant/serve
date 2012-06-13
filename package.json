@@ -9,7 +9,12 @@
     , "stylus": "*"
     , "jade": "*"
     , "commander": "0.4.1"
+    , "nib": "~0.4.1"
+  },
+  "bin": {
+    "serve": "./bin/serve"
+  },
+  "engines": {
+    "node": ">= 0.4.x < 0.7.0"
   }
-  , "bin": { "serve": "./bin/serve" }
-  , "engines": { "node": ">= 0.4.x < 0.7.0" }
 }

@@ -6,9 +6,12 @@
 
 var resolve = require('path').resolve
   , join = require('path').join
+  , existsSync = require('path').existsSync
   , program = require('commander')
   , connect = require('connect')
+  , coffee = require('coffee-script')
   , stylus = require('stylus')
+  , nib    = require('nib')
   , jade = require('jade')
   , url = require('url')
   , fs = require('fs');
@@ -20,12 +23,15 @@ program
   .usage('[options] [dir]')
   .option('-F, --format <fmt>', 'specify the log format string', 'dev')
   .option('-p, --port <port>', 'specify the port [3000]', Number, 3000)
+  .option('-c, --csdir <csdir>', 'specify the path to coffee files [src/coffee]', String, 'src/coffee')
+  .option('-j, --jsdir <jsdir>', 'specify the base url to js files [javascripts]', String, 'javascripts')
   .option('-H, --hidden', 'enable hidden file serving')
   .option('-S, --no-stylus', 'disable stylus rendering')
   .option('-J, --no-jade', 'disable jade rendering')
   .option('-I, --no-icons', 'disable icons')
   .option('-L, --no-logs', 'disable request logging')
   .option('-D, --no-dirs', 'disable directory serving')
+  .option('-C, --no-coffee', 'disable coffeescript rendering')
   .parse(process.argv);
 
 // path
@@ -45,6 +51,30 @@ if (program.stylus) {
   server.use(function(req, res, next){
     req.url = req.url.replace(/\.styl$/, '.css');
     next();
+  });
+}
+
+// Compile CoffeeScript
+if (program.coffee) {
+  server.use(function(req, res, next){
+    var reqURL = req.url.replace(/\?_=\d+/, '');
+    if (!reqURL.match(/\.js(\?.+)?$/)) return next();
+    // Check if the js exists already
+    if( existsSync(join(path, url.parse(req.url).pathname)) ){
+      return next();
+    } else {
+      var file = join(path, url.parse(req.url).pathname.replace(program.jsdir, program.csdir).replace(/\.js(\?_=\d+)?/, '.coffee'));
+      fs.readFile(file, 'ascii', function(err, str){
+        if (err) return next(err);
+        try {
+          res.setHeader('Content-Type', 'application/x-javascript');
+          js = coffee.compile( str );
+          res.end(js);
+        } catch (err) {
+          next(err);
+        }
+      });
+    }
   });
 }
 
@@ -69,7 +99,12 @@ if (program.jade) {
 }
 
 // stylus
-server.use(stylus.middleware({ src: path }));
+server.use(stylus.middleware({
+  src: path,
+  compile: function(str, path, fn){
+    return stylus(str).use(nib())
+  }
+}));
 
 // static files
 server.use(connect.static(path, { hidden: program.hidden }));
@@ -84,6 +119,7 @@ if (program.dirs) {
 }
 
 // start the server
+
 server.listen(program.port, function(){
   console.log('\033[90mserving \033[36m%s\033[90m on port \033[96m%d\033[0m', path, server.address().port);
 });
