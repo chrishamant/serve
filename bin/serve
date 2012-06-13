@@ -28,6 +28,7 @@ program
   .option('-H, --hidden', 'enable hidden file serving')
   .option('-S, --no-stylus', 'disable stylus rendering')
   .option('-J, --no-jade', 'disable jade rendering')
+  .option('-l, --less', 'compile your .less files on the fly as needed')
   .option('-I, --no-icons', 'disable icons')
   .option('-L, --no-logs', 'disable request logging')
   .option('-D, --no-dirs', 'disable directory serving')
@@ -53,6 +54,9 @@ if (program.stylus) {
     next();
   });
 }
+
+// less
+if (program.less) server.use(require('connect-less')({ src: path }));
 
 // Compile CoffeeScript
 if (program.coffee) {
