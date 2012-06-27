@@ -10,7 +10,9 @@
     , "jade": "*"
     , "commander": "0.4.1"
     , "connect-less": "~0.3.0"
+    , "requirejs" : "2.x"
     , "nib": "~0.4.1"
+    , "clientjade" : "0.0.5"
   },
   "bin": {
     "serve": "./bin/serve"
