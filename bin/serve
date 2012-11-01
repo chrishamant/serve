@@ -188,6 +188,6 @@ if (program.dirs) {
 
 // start the server
 
-server.listen(program.port, function(){
-  console.log('\033[90mserving \033[36m%s\033[90m on port \033[96m%d\033[0m', path, server.address().port);
+var realserver = server.listen(program.port, function(){
+  console.log('\033[90mserving \033[36m%s\033[90m on port \033[96m%d\033[0m', path, realserver.address().port);
 });
