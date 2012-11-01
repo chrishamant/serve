@@ -21,7 +21,7 @@ var resolve = require('path').resolve
 // CLI
 
 program
-  .version('1.0.3')
+  .version('1.1.0')
   .usage('[options] [dir]')
   .option('-F, --format <fmt>', 'specify the log format string', 'dev')
   .option('-p, --port <port>', 'specify the port [3000]', Number, 3000)
@@ -37,6 +37,7 @@ program
   .option('-L, --no-logs', 'disable request logging')
   .option('-D, --no-dirs', 'disable directory serving')
   .option('-C, --no-coffee', 'disable coffeescript rendering')
+  .option('-f, --favicon <path>', 'serve the given favicon')
   .parse(process.argv);
 
 var rjs_config = {
@@ -60,7 +61,7 @@ var path = resolve(program.args.shift() || '.');
 var server = connect();
 
 // ignore favicon
-server.use(connect.favicon());
+server.use(connect.favicon(program.favicon));
 
 // logger
 if (program.logs) server.use(connect.logger(program.format));
@@ -187,7 +188,7 @@ if (program.dirs) {
 }
 
 // start the server
-
-var realserver = server.listen(program.port, function(){
-  console.log('\033[90mserving \033[36m%s\033[90m on port \033[96m%d\033[0m', path, realserver.address().port);
+server.listen(program.port, function () {
+  console.log('\033[90mserving \033[36m%s\033[90m on port \033[96m%d\033[0m', path, program.port);
 });
+
