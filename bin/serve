@@ -91,6 +91,8 @@ server.use(function(req,res,next){
   }
 });
 
+var jadeclientlib = fs.readFileSync(__dirname+'/../jade-runtime.js','utf-8');
+
 server.use(function(req,res,next){
   var reqURL = req.url.replace(/\?_=\d+/, '');
   if (!reqURL.match(/templates\.js(\?.+)?$/)) return next();
@@ -100,8 +102,7 @@ server.use(function(req,res,next){
   };
   clientjade(opts, function(err, result) {
     if(err) respond(res,500,e.toString());
-    var beg = "var jade = jade || {};";
-    respond(res,200,beg+result);
+    respond(res,200,jadeclientlib + result);
   });
 });
 
