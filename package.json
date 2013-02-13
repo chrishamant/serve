@@ -15,6 +15,7 @@
     , "clientjade" : "*"
     , "less-middleware": "*"
     , "commander": "0.6.1"
+    , "coffee-script" : "*"
   },
   "bin": {
     "serve": "./bin/serve"
