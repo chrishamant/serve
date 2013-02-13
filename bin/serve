@@ -13,6 +13,7 @@ var resolve = require('path').resolve
   , stylus = require('stylus')
   , nib    = require('nib')
   , jade = require('jade')
+  , less = require('less-middleware')
   , url = require('url')
   , rjs = require('requirejs')
   , clientjade = require('clientjade')
@@ -38,6 +39,7 @@ program
   .option('-D, --no-dirs', 'disable directory serving')
   .option('-C, --no-coffee', 'disable coffeescript rendering')
   .option('-f, --favicon <path>', 'serve the given favicon')
+  .option('-C, --cors', 'allows cross origin access serving')
   .parse(process.argv);
 
 var rjs_config = {
@@ -175,6 +177,21 @@ server.use(stylus.middleware({
   }
 }));
 
+// less
+if (program.less) {
+  server.use(less({ src: path }));
+}
+
+// CORS access for files
+if (program.cors) {
+  server.use(function(req, res, next){
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept, x-csrf-token, origin');
+    if ('OPTIONS' == req.method) return res.end();
+    next();
+  });
+}
 // static files
 server.use(connect.static(path, { hidden: program.hidden }));
 
